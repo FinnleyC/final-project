@@ -1,1 +1,37 @@
+table, th, td {
+	border: 1px solid black;
+}
 
+th {
+	border-bottom: 4px solid black;
+}
+
+td {
+	border-bottom: 2px solid black;
+}
+
+a.LN1 {
+  font-style:normal;
+  font-weight:bold;
+  font-size:1.0em;
+}
+
+a.LN2:link {
+  color: blue;
+  text-decoration:underline;
+}
+
+a.LN3:visited {
+  color: blue;
+  text-decoration:underline;
+}
+
+a.LN4:hover {
+  color:#0BF;
+  text-decoration:underline;
+}
+
+a.LN5:active {
+  color:#0BF;
+  text-decoration:underline;
+}

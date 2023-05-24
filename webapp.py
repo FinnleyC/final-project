@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash
+from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash, Markup
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
@@ -37,7 +37,8 @@ github = oauth.remote_app(
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
-collection = db['posts'] #TODO: put the name of the collection here
+matches = db['Matches'] #TODO: put the name of the collection here
+seasons = db['Seasons']
 
 print("connected to db")
 
@@ -83,17 +84,30 @@ def authorized():
     return redirect('/')
 
 
-@app.route('/page1')
+@app.route('/mdb')
 def renderPage1():
-    if 'user_data' in session:
-        user_data_pprint = pprint.pformat(session['user_data'])#format the user data nicely
-    else:
-        user_data_pprint = '';
-    return render_template('page1.html',dump_user_data=user_data_pprint)
+    games = list(matches.find().sort("link", -1)) #sorts by link, highest to lowest; link represents most recent match
+    noplayoff = 1 #DEBUG, noplayoff will be user-defined, default 1
+    if noplayoff == 1:
+        games[:] = [g for g in games if g.get('playoff') != True]
+    htm = ""
+    for g in games:
+            htm += Markup('<tr><td>'+str(g['season'])+'</td><td><a class="LN1 LN2 LN3 LN4 LN5" href="https://rgl.gg/Public/Match.aspx?&m='+str(g['link'])+'" target="_top">'+g['week']+'</td><td>'+g['hteam']+'</td><td>'+g['ateam']+'</td><td>'+g['map1']+'</td><td>')
+            if 'log1' in g:
+                htm += Markup('<a class="LN1 LN2 LN3 LN4 LN5" href="https://logs.tf/'+g['log1']+'" target="_top">'+g['log1'])
+            elif 'ff' in g:
+                htm += Markup('FORFEIT')
+            if 'demo1' in g:
+                htm += Markup('</td><td><a class="LN1 LN2 LN3 LN4 LN5" href="https://logs.tf/'+g['demo1']+'" target="_top">'+g['demo1']+'</td></tr>')
+            elif 'ff' in g:
+                htm += Markup('</td><td>FORFEIT</td></tr>')
+            else:
+                htm += Markup('</td><td></td></tr>')
+    return render_template('mdb.html', htm = htm)
 
-@app.route('/page2')
+@app.route('/pview')
 def renderPage2():
-    return render_template('page2.html')
+    return render_template('pview.html')
 
 #the tokengetter is automatically called to check who is logged in.
 @github.tokengetter

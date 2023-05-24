@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% set active_page = "mdb" %}
+
+{% block title %}Match Database{% endblock %}
+
+{% block content %}
+  <h1>This is the Match Database</h1>
+
+  <a href="https://rgl.gg/">information from RGL</a>
+  <br>
+  <table style="width:100%">
+	<tr>
+		<th>Season</th>
+		<th>Week</th>
+		<th>Home Team</th>
+		<th>Away Team</th>
+		<th>Map</th>
+		<th>Log</th>
+		<th>Demo</th>
+	</tr>
+	{{ htm }}
+  </table>
+
+{% endblock %}
