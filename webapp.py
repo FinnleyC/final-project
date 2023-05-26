@@ -87,11 +87,48 @@ def authorized():
 @app.route('/mdb')
 def renderPage1():
     games = list(matches.find().sort("link", -1)) #sorts by link, highest to lowest; link represents most recent match
-    noplayoff = 1 #DEBUG, noplayoff will be user-defined, default 1
-    if noplayoff == 1:
-        games[:] = [g for g in games if g.get('playoff') != True]
-    htm = ""
+    noplayoff = 1
+    gseason = ""
+    gmap = ""
+    gteam = ""
+    gweek = ""
+    if 'season' in request.args:
+        gseason = request.args['season']   #DEBUG, will be user defined int()
+        gmap = request.args['map']              #user defined dropdown for all maps
+        gteam = request.args['team']            #user defined dropdown for all teams
+        gweek = request.args['week']            #user defined text for week (MAKE NOT CASE SENSITIVE)
+    gfinal = []
     for g in games:
+        playoffbool = True
+        seasonbool = True
+        mapbool = True
+        teambool = True
+        weekbool = True
+        if noplayoff == 1:
+            if 'playoff' in g and g.get('playoff') == True:
+                playoffbool = False
+            #games where playoff != True
+        if gseason != "":
+            if g['season'] != int(gseason):
+                seasonbool = False
+            #games in season   
+        if gmap != "":
+            if gmap not in g['map1']:
+                mapbool = False
+            #games on map
+        if gteam != "":
+            if g['hteam'] != gteam and g['ateam'] != gteam:
+                teambool = False
+            #games with team
+        if gweek != "":
+            if gweek not in g['week']:
+                weekbool = False
+            #games in week
+        if playoffbool and seasonbool and mapbool and teambool and weekbool == True:
+            gfinal.append(g)
+    #todo: commit to new branch and make load only table ajax load() (so options will stay after submit)
+    htm = ""
+    for g in gfinal:
             htm += Markup('<tr><td>'+str(g['season'])+'</td><td><a class="LN1 LN2 LN3 LN4 LN5" href="https://rgl.gg/Public/Match.aspx?&m='+str(g['link'])+'" target="_top">'+g['week']+'</td><td>'+g['hteam']+'</td><td>'+g['ateam']+'</td><td>'+g['map1']+'</td><td>')
             if 'log1' in g:
                 htm += Markup('<a class="LN1 LN2 LN3 LN4 LN5" href="https://logs.tf/'+g['log1']+'" target="_top">'+g['log1'])
