@@ -126,7 +126,7 @@ def renderPage1():
             #games in week
         if playoffbool and seasonbool and mapbool and teambool and weekbool == True:
             gfinal.append(g)
-    #todo: commit to new branch and make load only table ajax load() (so options will stay after submit)
+    #todo: make load only table ajax load() (so options will stay after submit)
     htm = ""
     for g in gfinal:
             htm += Markup('<tr><td>'+str(g['season'])+'</td><td><a class="LN1 LN2 LN3 LN4 LN5" href="https://rgl.gg/Public/Match.aspx?&m='+str(g['link'])+'" target="_top">'+g['week']+'</td><td>'+g['hteam']+'</td><td>'+g['ateam']+'</td><td>'+g['map1']+'</td><td>')
