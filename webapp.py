@@ -87,15 +87,18 @@ def authorized():
 @app.route('/mdb')
 def renderPage1():
     games = list(matches.find().sort("link", -1)) #sorts by link, highest to lowest; link represents most recent match
-    noplayoff = 1
+    gplayoff = 0
     gseason = ""
     gmap = ""
     gteam = ""
+    gteam2 = ""
     gweek = ""
     if 'season' in request.args:
-        gseason = request.args['season']   #DEBUG, will be user defined int()
+        gplayoff = int(request.args['playoff'])       #user defined bool for including playoff games
+        gseason = request.args['season']        #user defined int() for season
         gmap = request.args['map']              #user defined dropdown for all maps
-        gteam = request.args['team']            #user defined dropdown for all teams
+        gteam = request.args['team1']           #user defined dropdown for all teams
+        gteam2 = request.args['team2']          #user defined dropdown for a 2nd team
         gweek = request.args['week']            #user defined text for week (MAKE NOT CASE SENSITIVE)
     gfinal = []
     for g in games:
@@ -104,7 +107,7 @@ def renderPage1():
         mapbool = True
         teambool = True
         weekbool = True
-        if noplayoff == 1:
+        if gplayoff == 0:
             if 'playoff' in g and g.get('playoff') == True:
                 playoffbool = False
             #games where playoff != True
@@ -120,6 +123,9 @@ def renderPage1():
             if g['hteam'] != gteam and g['ateam'] != gteam:
                 teambool = False
             #games with team
+        if gteam2 != "":
+            if g['hteam'] != gteam2 and g['ateam'] != gteam2:
+                teambool = False
         if gweek != "":
             if gweek not in g['week']:
                 weekbool = False
@@ -142,9 +148,10 @@ def renderPage1():
                 htm += Markup('</td><td></td></tr>')
     return render_template('mdb.html', htm = htm)
 
-@app.route('/pview')
+@app.route('/uload')
 def renderPage2():
-    return render_template('pview.html')
+    {"season":{"$numberInt":"{{ SEASON }}"},"week":"{{ WEEK }}","hteam":"{{ HTEAM }}","ateam":"{{ ATEAM }}","map1":"{{ MAP }}","log1":"{{ LOG }}","demo1":"{{ DEMO }}","link":{"$numberInt":"{{ LINK }}"}}
+    return render_template('uload.html')
 
 #the tokengetter is automatically called to check who is logged in.
 @github.tokengetter

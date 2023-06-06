@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% set active_page = "uload" %}
+
+{% block title %}Uploader{% endblock %}
+
+{% block content %}
+  <h1>Upload a match to the database</h1>
+
+  <a href="https://rgl.gg/">Get information from RGL</a>
+  <br>
+  <p>please note everything is case sensitive, be careful and double check! Playoff games will be inputted manually, do not input them here</p>
+  <form action="/uload" autocomplete="off">
+	<label for="season">RGL season:</label>
+	<input type="number" id="season" name="season" min="1" max="12">
+	<br>
+	<label for="week">Week (ex: 2a, 4b, 1a):</label>
+	<input type="text" id="week" name="week">
+	<br>
+	<label for="hteam">Home team TAG (ex: FROYO, MAL-, wG):</label>
+	<input type="text" id="hteam" name="hteam">
+	<label for="ateam">Away team TAG:</label>
+	<input type="text" id="ateam" name="ateam">
+	<br>
+	<label for="map">map:</label>
+	<input type="text" id="map" name="map">
+	<br>
+	<label for="log">logs.tf link number (ex: 3354928, 2981982):</label>
+	<input type="text" id="log" name="log">
+	<br>
+	<label for="demo">demos.tf link number (ex 945244, 291084):</label>
+	<input type="text" id="demo" name="demo">
+	<br>
+	<label for="link">RGL match link number (ex 22852, 15492):</label>
+	<input type="number" id="link" name="link" max="99999">
+	<br>
+	<label for="playoff">playoff game?:</label>
+	<select id="playoff" name="playoff">
+		<option value="0">no</option>
+		<option value="1">yes</option>
+	</select>
+	<br>
+	<input type="submit" value="submit">
+  </form>
+
+{% endblock %}
