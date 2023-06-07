@@ -150,9 +150,37 @@ def renderPage1():
 
 @app.route('/uload')
 def renderPage2():
-    {"season":{"$numberInt":"{{ SEASON }}"},"week":"{{ WEEK }}","hteam":"{{ HTEAM }}","ateam":"{{ ATEAM }}","map1":"{{ MAP }}","log1":"{{ LOG }}","demo1":"{{ DEMO }}","link":{"$numberInt":"{{ LINK }}"}}
+    useason = ""
+    uweek = ""
+    uteam1 = ""
+    uteam2 = ""
+    umap = ""
+    ulog = ""
+    udemo = ""
+    ulink = ""
+    uplayoff = ""
+    uff = ""
+    if 'season' and 'week' and 'hteam' and 'ateam' and 'map' and 'log' and 'demo' and 'link' and 'playoff' in request.args:
+        useason = request.args['season']
+        uweek = request.args['week']
+        uteam1 = request.args['hteam']
+        uteam2 = request.args['ateam']
+        umap = request.args['map']
+        ulog = request.args['log']
+        udemo = request.args['demo']
+        ulink = request.args['link']
+        uplayoff = int(request.args['playoff'])
+        uff = request.args['ff']
+    mtch = ""
+    mtch += Markup('{"season":{"$numberInt":"'+useason+'"},"week":"'+uweek+'","hteam":"'+uteam1+'","ateam":"'+uteam2+'","map1":"'+umap+'","log1":"'+ulog+'","demo1":"'+udemo+'","link":{"$numberInt":"'+ulink)
+    if uff == 'true':
+        mtch += Markup('"},"ff":true,"flag":true}')
+    else:
+        mtch += Markup('"},"flag":true}')
+    if uplayoff == 0:
+        matches.insert_one(mtch)
     return render_template('uload.html')
-
+    
 #the tokengetter is automatically called to check who is logged in.
 @github.tokengetter
 def get_github_oauth_token():

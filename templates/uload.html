@@ -6,11 +6,12 @@
 
 {% block content %}
   <h1>Upload a match to the database</h1>
-
+  <small>for logged in users only</small>
+<br>
   <a href="https://rgl.gg/">Get information from RGL</a>
   <br>
-  <p>please note everything is case sensitive, be careful and double check! Playoff games will be inputted manually, do not input them here</p>
-  <form action="/uload" autocomplete="off">
+  <p>Please note that everything is case sensitive, be careful and double check! Playoff games will be inputted manually, do not input them here</p>
+  <form action="/uload" autocomplete="off" onsubmit="return confirm('Is the form filled out correctly?');">
 	<label for="season">RGL season:</label>
 	<input type="number" id="season" name="season" min="1" max="12">
 	<br>
@@ -22,7 +23,7 @@
 	<label for="ateam">Away team TAG:</label>
 	<input type="text" id="ateam" name="ateam">
 	<br>
-	<label for="map">map:</label>
+	<label for="map">map (ex: cp_process_f12, koth_product_rcx):</label>
 	<input type="text" id="map" name="map">
 	<br>
 	<label for="log">logs.tf link number (ex: 3354928, 2981982):</label>
@@ -32,7 +33,7 @@
 	<input type="text" id="demo" name="demo">
 	<br>
 	<label for="link">RGL match link number (ex 22852, 15492):</label>
-	<input type="number" id="link" name="link" max="99999">
+	<input type="number" id="link" name="link" min="3500" max="99999">
 	<br>
 	<label for="playoff">playoff game?:</label>
 	<select id="playoff" name="playoff">
@@ -40,7 +41,12 @@
 		<option value="1">yes</option>
 	</select>
 	<br>
+	<label for="ff">FORFEIT?:</label>
+	<select id="ff" name="ff">
+		<option value="0">no</option>
+		<option value="true">yes</option>
+	</select>
+	<br>
 	<input type="submit" value="submit">
   </form>
-
 {% endblock %}
