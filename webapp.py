@@ -151,6 +151,7 @@ def renderPage1():
     
 @app.route('/uload')
 def renderPage2():
+    ustatus = ""
     useason = ""
     uweek = ""
     uteam1 = ""
@@ -173,16 +174,18 @@ def renderPage2():
         uplayoff = int(request.args['playoff'])
         uff = request.args['ff']
     mtch = ""
-    mtch += Markup('{"season":'+useason+'},"week":"'+uweek+'","hteam":"'+uteam1+'","ateam":"'+uteam2+'","map1":"'+umap+'","log1":"'+ulog+'","demo1":"'+udemo+'","link":'+ulink)
+    mtch += Markup('{"season":{"$numberInt":"'+useason+'"},"week":"'+uweek+'","hteam":"'+uteam1+'","ateam":"'+uteam2+'","map1":"'+umap+'","log1":"'+ulog+'","demo1":"'+udemo+'","link":{"$numberInt":"'+ulink)
     if uff == 'true':
-        mtch += Markup(',"ff":true,"flag":true}')
+        mtch += Markup('"},"ff":true,"flag":true}')
     else:
-        mtch += Markup(',"flag":true}')
+        mtch += Markup('"},"flag":true}')
     mtchf = json.loads(mtch)
     if uplayoff == 0:
         print(mtchf)
-        matches.insert_one(mtchf)
-    return render_template('uload.html')
+        #matches.insert_one(mtchf)
+        ustatus = "Match Uploaded!"
+    return render_template('uload.html', ustatus = ustatus)
+    #todo: test/fix improper formatting on /mdb from metadata associated with uploads
     
 #the tokengetter is automatically called to check who is logged in.
 @github.tokengetter
